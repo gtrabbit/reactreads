@@ -13,7 +13,7 @@ class BookDisplay extends Component {
 	state = {}
 
 	moveBook = (shelf) => {
-		this.props.onMoveBook(this.props.book.shelf, shelf, this.props.book.id)
+		this.props.onMoveBook(this.props.book.shelf, shelf, this.props.book)
 	}
 	
 

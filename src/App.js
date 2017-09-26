@@ -8,73 +8,66 @@ import BookList from './booklist'
 class BooksApp extends React.Component {
   state = {
     books: [],
-    shelves: []
-
-  }
-  reading = [];
-  upcoming = [];
-  read = [];
-
-  onMoveBook(formerShelf, newShelf, book){
-    BooksAPI.update(book, newShelf).then(res=>console.log(res));
-    console.log(formerShelf, newShelf, book)
- 
-  }
-
-  componentDidMount(){
-    BooksAPI.getAll().then((books)=>{
-      console.log(books);
-      this.setState({books})
-      let shelves = ['currentlyReading', 'wantToRead', 'read']
-      books.forEach(a=>{
-        switch(a.shelf){
-          case shelves[0]:
-            this.reading.push(a);
-            break;
-          case shelves[1]:
-            this.upcoming.push(a);
-            break;
-          case shelves[2]:
-            this.read.push(a);
-            break;
-          default:
-            break;
-        }
-      })
-        this.setState(
-        {
-          shelves: [
+    shelves: [
               {
                 'title': 'Currently Reading',
-                'books': this.reading,
+                'books': [],
                 'name': 'currentlyReading'
                 },
               {
                 'title': 'Upcoming Reads',
-                'books': this.upcoming,
+                'books': [],
                 'name': 'wantToRead'
                 },
               {
                 'title': 'Archive',
-                'books': this.read,
+                'books': [],
                 'name': 'read'
                 }
             ]
-        }
-     
 
+  }
 
-        )
+  shelves = ['currentlyReading', 'wantToRead', 'read']
+
+  onMoveBook(formerShelf, newShelf, book){
+    BooksAPI.update(book, newShelf)//.then(res=>console.log(res)).catch(err=>{console.log(err)});
+    const shelfIndeces = [this.shelves.indexOf(formerShelf), this.shelves.indexOf(newShelf)]
+    this.setState(state=>{
+      state.shelves[shelfIndeces[1]].books.push(
+        state.shelves[shelfIndeces[0]].books.splice(
+        state.shelves.indexOf(book), 1)[0])
+      return {shelves: state.shelves}
     })
   }
 
-  moveBook = (book, shelf)=>{
-    //move the book to the shelf
+  componentDidMount(){
+    BooksAPI.getAll().then((books)=>{
+      this.setState((state)=>{
+        books.forEach(a=>{
+          switch(a.shelf){
+            case this.shelves[0]:
+              state.shelves[0].books.push(a);
+              break;
+            case this.shelves[1]:
+              state.shelves[1].books.push(a);
+              break;
+            case this.shelves[2]:
+              state.shelves[2].books.push(a);
+              break;
+            default:
+              break;
+          }
+        })
 
+        return {
+          books: books,
+          shelves: state.shelves
+        }
+
+      })
+    })
   }
-
-
-
 
   render() {
     return (
@@ -96,7 +89,7 @@ class BooksApp extends React.Component {
                       books={a.books}
                       key={i}
                       shelf={a} 
-                      onMoveBook={this.onMoveBook}
+                      onMoveBook={this.onMoveBook.bind(this)}
                       />
                     ))
                   }
