@@ -5,20 +5,33 @@ import PropTypes from 'prop-types'
 class BookDisplay extends Component {
 	static PropTypes = {
 		book: PropTypes.object.isRequired,
-		onMoveBook: PropTypes.func.isRequired
-
+		onMoveBook: PropTypes.func.isRequired,
+		shelf: PropTypes.object.isRequired
 
 	}
 
-	state = {}
+	state = {
+		shelf: this.props.shelf.name
+	}
 
-	moveBook = (shelf) => {
-		this.props.onMoveBook(this.props.book.shelf, shelf, this.props.book)
+	moveBook = (eventTarget) => {
+		console.log(this.state)
+		this.props.onMoveBook(this.props.book.shelf, eventTarget.value, this.props.book)
+		this.setState({shelf: eventTarget.value})
+		eventTarget.defaultValue = eventTarget.value;
+		
+
 	}
 	
 
 
 	render() {
+
+		const values = [
+			["currentlyReading", "Currently Reading"],
+			["wantToRead", "Upcoming Reads"],
+			["read", "Archive"],
+			["none", "Remove"]];
 
 		return (
 		<li>
@@ -27,13 +40,16 @@ class BookDisplay extends Component {
 					<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.book.imageLinks.thumbnail})` }}></div>
 					<div className="book-shelf-changer">
 						<select
-							onChange={(event)=> this.moveBook(event.target.value)}
+							onChange={(event)=> this.moveBook(event.target)}
+							defaultValue={this.state.shelf}
 						>
-							<option value="none" disabled>Move to...</option>
-							<option value="currentlyReading">Currently Reading</option>
-							<option value="wantToRead">Want to Read</option>
-							<option value="read">Read</option>
-							<option value="none">None</option>
+						<option value="none" disabled>Move to...</option>
+						{values.map(a=>(
+							<option key={a[0]} value={a[0]}>
+								{a[1]} </option>
+						))}
+
+	
 						</select>
 					</div>
 				</div>

@@ -33,10 +33,11 @@ class BooksApp extends React.Component {
   onMoveBook(formerShelf, newShelf, book){
     BooksAPI.update(book, newShelf)//.then(res=>console.log(res)).catch(err=>{console.log(err)});
     const shelfIndeces = [this.shelves.indexOf(formerShelf), this.shelves.indexOf(newShelf)]
+    book.shelf = newShelf
     this.setState(state=>{
       state.shelves[shelfIndeces[1]].books.push(
         state.shelves[shelfIndeces[0]].books.splice(
-        state.shelves.indexOf(book), 1)[0])
+        state.shelves[shelfIndeces[0]].books.indexOf(book), 1)[0])
       return {shelves: state.shelves}
     })
   }
@@ -99,8 +100,6 @@ class BooksApp extends React.Component {
                 <Link to="/addbook">Add a book </Link> 
               </div>
             </div>
-          
-
           )}
         />
         <Route

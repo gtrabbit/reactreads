@@ -24,6 +24,7 @@ class BookList extends Component {
                     		<BookDisplay 
                     			book={a}
                     			key={i}
+                          shelf={this.props.shelf}
                     			onMoveBook={this.props.onMoveBook} />
 
                     		))}
