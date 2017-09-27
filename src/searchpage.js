@@ -1,9 +1,17 @@
- 
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
+
+class SearchPage extends Component {
 
 
 
+  render () {
 
- <div className="search-books">
+
+    return (
+
+       <div className="search-books">
             <div className="search-books-bar">
               <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
               <div className="search-books-input-wrapper">
@@ -23,3 +31,18 @@
               <ol className="books-grid"></ol>
             </div>
           </div>
+
+
+      )
+
+ 
+  } 
+
+}
+
+
+export default SearchPage
+
+
+
+    

@@ -4,6 +4,8 @@ import './App.css'
 import { Link } from 'react-router-dom'
 import { Route } from 'react-router-dom'
 import BookList from './booklist'
+import SearchPage from './searchpage'
+import Header from './header'
 
 class BooksApp extends React.Component {
   state = {
@@ -77,11 +79,8 @@ class BooksApp extends React.Component {
       <Route
         exact path="/"
         render={()=>(
-          
-            <div className="list-books">
-              <div className="list-books-title">
-                <h1>MyReads</h1>
-              </div>
+          <div className="list-books">
+            <Header> </Header>
               <div className="list-books-content">
                 <div>
                   {this.state.shelves.map((a, i)=>(
@@ -103,9 +102,13 @@ class BooksApp extends React.Component {
           )}
         />
         <Route
-          path="/dogblanket"
+          path="/addbook"
           render={({history})=>(
-              <p> kiises </p>
+            <div>
+              <Header> </Header>
+
+              <SearchPage> </SearchPage>
+            </div>
 
             )}
             />
@@ -116,4 +119,4 @@ class BooksApp extends React.Component {
   }
 }
 
-export default BooksApp
+export default BooksApp;
