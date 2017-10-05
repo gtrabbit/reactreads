@@ -12,13 +12,16 @@ class SearchPage extends Component {
   }
 
   state = {
-    results: []
+    results: [],
+    query: ''
   }
 
 
-  sendQuery = (e) => {
-    e.preventDefault()
-    search(e.target.firstChild.value).then(res => {
+  updateQuery = (e) => {
+    this.setState({
+      query: e
+    })
+    search(e).then(res => {
       this.setState({results: res});
        })
   }
@@ -31,12 +34,14 @@ class SearchPage extends Component {
             <div className="search-books-bar">
               <Link className="close-search" to="/">Close</Link>
               <div className="search-books-input-wrapper">
-                <form onSubmit={this.sendQuery}>
+ 
                 <input 
                   type="text"
                   placeholder="Search by title or author"
+                  value={this.state.query}
+                  onChange={(e)=> this.updateQuery(e.target.value)}
                   />
-                </form>
+
               </div>
             </div>
             <div className="search-books-results">
