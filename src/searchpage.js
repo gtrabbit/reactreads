@@ -61,13 +61,8 @@ class SearchPage extends Component {
               </ol>
             </div>
           </div>
-
-
       )
-
- 
   } 
-
 }
 
 
