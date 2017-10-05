@@ -11,16 +11,23 @@ class BookDisplay extends Component {
 	}
 
 	state = {
-		shelf: this.props.shelf.name
+		shelf: this.props.shelf.name,
+		added: false
 	}
 
+
 	moveBook = (eventTarget) => {
-		console.log(this.state)
+		
+		if (this.state.shelf === 'search'){
+			if (eventTarget.value === 'none'){
+				return false;
+			}
+
+			this.setState({added: true})
+		}
+		eventTarget.defaultValue = eventTarget.value;
 		this.props.onMoveBook(this.props.book.shelf, eventTarget.value, this.props.book)
 		this.setState({shelf: eventTarget.value})
-		eventTarget.defaultValue = eventTarget.value;
-		
-
 	}
 	
 
@@ -43,7 +50,7 @@ class BookDisplay extends Component {
 							onChange={(event)=> this.moveBook(event.target)}
 							defaultValue={this.state.shelf}
 						>
-						<option value="none" disabled>Move to...</option>
+						<option value="search" disabled>Move to...</option>
 						{values.map(a=>(
 							<option key={a[0]} value={a[0]}>
 								{a[1]} </option>
@@ -54,12 +61,14 @@ class BookDisplay extends Component {
 					</div>
 				</div>
 			<div className="book-title">{this.props.book.title}</div>
+			
 			<div className="book-authors">
-				{this.props.book.authors.map(a=>(
+				{this.props.book.authors && this.props.book.authors.map(a=>(
 					<p key={a}> {a} </p>
 
 					))}
 			</div>
+			<div className="added-marker" style={{display: this.state.added ? 'flex' : 'none'}}> Added to Collection! </div>
 			</div>
 		</li>)
 	}

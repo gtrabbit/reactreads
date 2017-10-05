@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 
 
@@ -10,7 +10,7 @@ render (){
 	return (
 	
         <div className="list-books-title">
-            <h1>MyReads</h1>
+            <h1><Link to="/">MyReads</Link></h1>
         </div>
 		)
 

@@ -30,11 +30,22 @@ class BooksApp extends React.Component {
 
   }
 
-  shelves = ['currentlyReading', 'wantToRead', 'read']
+  shelves = ['currentlyReading', 'wantToRead', 'read', 'none']
 
   onMoveBook(formerShelf, newShelf, book){
-    BooksAPI.update(book, newShelf)//.then(res=>console.log(res)).catch(err=>{console.log(err)});
     const shelfIndeces = [this.shelves.indexOf(formerShelf), this.shelves.indexOf(newShelf)]
+
+
+    if (newShelf === 'none'){
+      BooksAPI.update(book, newShelf)
+      delete book.shelf;
+      this.setState(state => {
+        state.shelves[shelfIndeces[0]].books.splice(
+        state.shelves[shelfIndeces[0]].books.indexOf(book), 1)
+      })
+    } else {
+       BooksAPI.update(book, newShelf)//.then(res=>console.log(res)).catch(err=>{console.log(err)});
+    
     book.shelf = newShelf
     this.setState(state=>{
       state.shelves[shelfIndeces[1]].books.push(
@@ -42,7 +53,20 @@ class BooksApp extends React.Component {
         state.shelves[shelfIndeces[0]].books.indexOf(book), 1)[0])
       return {shelves: state.shelves}
     })
+    }
+
+
+   
   }
+
+  onAddBook(old, newShelf, book){   
+    BooksAPI.update(book, newShelf)
+    this.setState(state=>{
+      state.shelves[this.shelves.indexOf(newShelf)].books.push(book)
+    })
+  }
+
+
 
   componentDidMount(){
     BooksAPI.getAll().then((books)=>{
@@ -73,6 +97,9 @@ class BooksApp extends React.Component {
   }
 
   render() {
+
+
+
     return (
       <div className="app">
 
@@ -107,7 +134,9 @@ class BooksApp extends React.Component {
             <div>
               <Header> </Header>
 
-              <SearchPage> </SearchPage>
+              <SearchPage
+                addBook={this.onAddBook.bind(this)}
+              > </SearchPage>
             </div>
 
             )}
