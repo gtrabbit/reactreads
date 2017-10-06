@@ -8,6 +8,7 @@ import BookDisplay from './bookdisplay'
 class SearchPage extends Component {
     static PropTypes = {
     addBook: PropTypes.func.isRequired,
+    oldBooks: PropTypes.array
 
   }
 
@@ -21,9 +22,12 @@ class SearchPage extends Component {
     this.setState({
       query: e
     })
-    search(e).then(res => {
-      this.setState({results: res});
-       })
+    if (e){
+      search(e).then(res => {
+        this.setState({results: res.filter(a => !this.props.oldBooks.some(b=> b.id === a.id))});
+        })
+    }
+
   }
 
 
@@ -52,7 +56,7 @@ class SearchPage extends Component {
                                 <BookDisplay
                                   book={a}
                                   key={i}
-                                  shelf={{name: 'search'}}
+                                  shelf={'search'}
                                   onMoveBook={this.props.addBook}
                                 >  </BookDisplay>
                                 ))

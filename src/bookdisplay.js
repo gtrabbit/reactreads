@@ -11,7 +11,7 @@ class BookDisplay extends Component {
 	}
 
 	state = {
-		shelf: this.props.shelf.name,
+		shelf: this.props.shelf,
 		added: false
 	}
 
@@ -22,37 +22,41 @@ class BookDisplay extends Component {
 			if (eventTarget.value === 'none'){
 				return false;
 			}
-
 			this.setState({added: true})
 		}
-		eventTarget.defaultValue = eventTarget.value;
+
+		this.setState({shelf: eventTarget.value});
 		this.props.onMoveBook(this.props.book.shelf, eventTarget.value, this.props.book)
-		this.setState({shelf: eventTarget.value})
+
 	}
 	
-
-
-	render() {
-
-		const values = [
+	values = [
 			["currentlyReading", "Currently Reading"],
 			["wantToRead", "Upcoming Reads"],
 			["read", "Archive"],
 			["none", "Remove"]];
 
+
+	render() {
+
+ 
+
 		return (
 		<li>
 			<div className="book">
 				<div className="book-top">
-					<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.book.imageLinks.thumbnail})` }}></div>
+					<div className="book-cover" style={{background: this.props.book.imageLinks.hasOwnProperty('thumbnail') ? `url(${this.props.book.imageLinks.thumbnail})` : 'silver'}}></div>
 					<div className="book-shelf-changer">
 						<select
 							onChange={(event)=> this.moveBook(event.target)}
 							defaultValue={this.state.shelf}
 						>
 						<option value="search" disabled>Move to...</option>
-						{values.map(a=>(
-							<option key={a[0]} value={a[0]}>
+						{this.values.map(a=>(
+							<option 
+								key={a[0]}
+								value={a[0]}
+								disabled={(this.state.shelf === 'search' && a[0] === 'none') ? true : false}>
 								{a[1]} </option>
 						))}
 

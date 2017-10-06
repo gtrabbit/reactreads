@@ -4,8 +4,7 @@ This project converts the MyReads starter files into a dynamic React application
 
 ## Getting Started
 
-If you already have Node.js and npm installed, this repository has everything necessary to get started with the MyReads application. Simply clone this repository, cd into that directory and enter `npm start` to launch the local webserver. This will open your browser to localhost:3000, displaying the main page of the application. (If not, you may need to open your browser and navigate to localhost:3000 manually). 
-
+If you already have Node.js and npm installed, this repository has everything necessary to get started with the MyReads application. Simply clone this repository, cd into that directory and enter `npm install` to install all dependencies, including React, React-Router and Prop-types. When the install has finished, you are ready to launch the local webserver by entering `npm start`. This will open your browser to localhost:3000, displaying the main page of the application. (If not, you may need to open your browser and navigate to localhost:3000 manually). 
 
 
 ## Create React App

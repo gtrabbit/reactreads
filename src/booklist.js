@@ -1,38 +1,40 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 import BookDisplay from './bookdisplay'
 
 
-class BookList extends Component {
-	static PropTypes = {
-		books: PropTypes.array.isRequired,
-		shelf: PropTypes.object.isRequired,
-		onMoveBook: PropTypes.func.isRequired
-
-	}
-
-	state = {}
-
-	render() {
+const BookList = function(props) {
 
 		return (
                 <div className="bookshelf">
-                  <h2 className="bookshelf-title">{this.props.shelf.title}</h2>
+                  <h2 className="bookshelf-title"> 
+                  {
+                  ( (shelf)=>{switch(shelf){
+                        case 'currentlyReading':
+                          return 'Currently Reading'
+                        case 'wantToRead':
+                          return 'Upcoming Reads'
+                        case 'read':
+                          return 'Archive'
+                        default:
+                          return 'None';
+                      }} )(props.shelf)
+
+                  } </h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                    	{this.props.books.map((a,i)=>(
+                    	{props.books.map((a,i)=>(
                     		<BookDisplay 
                     			book={a}
                     			key={i}
-                          shelf={this.props.shelf}
-                    			onMoveBook={this.props.onMoveBook} />
+                          shelf={props.shelf}
+                    			onMoveBook={props.onMoveBook} />
 
                     		))}
                     </ol>
                   </div>
                 </div>
                 
-        )}
+        )
 
 }
 

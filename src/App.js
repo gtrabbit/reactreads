@@ -9,60 +9,32 @@ import Header from './header'
 
 class BooksApp extends React.Component {
   state = {
-    books: [],
-    shelves: [
-              {
-                'title': 'Currently Reading',
-                'books': [],
-                'name': 'currentlyReading'
-                },
-              {
-                'title': 'Upcoming Reads',
-                'books': [],
-                'name': 'wantToRead'
-                },
-              {
-                'title': 'Archive',
-                'books': [],
-                'name': 'read'
-                }
-            ]
-
+    books: []
   }
 
-  shelves = ['currentlyReading', 'wantToRead', 'read', 'none']
+  shelves = ['currentlyReading', 'wantToRead', 'read']
 
   onMoveBook(formerShelf, newShelf, book){
-    const shelfIndeces = [this.shelves.indexOf(formerShelf), this.shelves.indexOf(newShelf)]
+    BooksAPI.update(book, newShelf).then(res=>{
 
-
-    if (newShelf === 'none'){
-      BooksAPI.update(book, newShelf)
-      delete book.shelf;
-      this.setState(state => {
-        state.shelves[shelfIndeces[0]].books.splice(
-        state.shelves[shelfIndeces[0]].books.indexOf(book), 1)
-      })
-    } else {
-       BooksAPI.update(book, newShelf)//.then(res=>console.log(res)).catch(err=>{console.log(err)});
-    
-    book.shelf = newShelf
-    this.setState(state=>{
-      state.shelves[shelfIndeces[1]].books.push(
-        state.shelves[shelfIndeces[0]].books.splice(
-        state.shelves[shelfIndeces[0]].books.indexOf(book), 1)[0])
-      return {shelves: state.shelves}
-    })
-    }
-
-
-   
+      if (newShelf === 'none'){
+        this.setState(state=>{
+          state.books.splice(state.books.indexOf(book), 1)
+        })
+      } else {
+        this.setState((state)=>{
+          state.books.find((a)=>a.id === book.id).shelf = newShelf;
+        })
+      }
+    }) 
   }
 
-  onAddBook(old, newShelf, book){   
-    BooksAPI.update(book, newShelf)
-    this.setState(state=>{
-      state.shelves[this.shelves.indexOf(newShelf)].books.push(book)
+  onAddBook(old, newShelf, book){
+    book.shelf = newShelf;
+    BooksAPI.update(book, newShelf).then(res=>{
+      this.setState( (state) => {
+        state.books.push(book)
+      })
     })
   }
 
@@ -70,36 +42,14 @@ class BooksApp extends React.Component {
 
   componentDidMount(){
     BooksAPI.getAll().then((books)=>{
-      this.setState((state)=>{
-        books.forEach(a=>{
-          switch(a.shelf){
-            case this.shelves[0]:
-              state.shelves[0].books.push(a);
-              break;
-            case this.shelves[1]:
-              state.shelves[1].books.push(a);
-              break;
-            case this.shelves[2]:
-              state.shelves[2].books.push(a);
-              break;
-            default:
-              break;
-          }
-        })
-
-        return {
-          books: books,
-          shelves: state.shelves
-        }
-
-      })
+      this.setState({books: books})
     })
+
+
   }
 
   render() {
-
-
-
+    
     return (
       <div className="app">
 
@@ -110,35 +60,33 @@ class BooksApp extends React.Component {
             <Header> </Header>
               <div className="list-books-content">
                 <div>
-                  {this.state.shelves.map((a, i)=>(
-
-                    <BookList 
-                      books={a.books}
+                {this.shelves.map( (a, i) => (
+                  <BookList 
+                      books={this.state.books.filter(b=>b.shelf===a)}
                       key={i}
-                      shelf={a} 
+                      shelf={a}
                       onMoveBook={this.onMoveBook.bind(this)}
                       />
-                    ))
-                  }
+                    )
+                  )}
                 </div>
               </div>
               <div className="open-search">
-                <Link to="/addbook">Add a book </Link> 
+                <Link to="/search">Add a book </Link> 
               </div>
             </div>
           )}
         />
         <Route
-          path="/addbook"
+          path="/search"
           render={({history})=>(
             <div>
               <Header> </Header>
-
               <SearchPage
                 addBook={this.onAddBook.bind(this)}
+                oldBooks={this.state.books}
               > </SearchPage>
             </div>
-
             )}
             />
 
